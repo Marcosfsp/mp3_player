@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
-        title: const Text('MP3 Player'),
+        title: const Text('Spotify Dos Crias'),
         centerTitle: true,
         elevation: 0,
         backgroundColor: theme.colorScheme.primary,
@@ -261,15 +261,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   offset: const Offset(0, -2),
                 ),
               ],
-            ),
-            child: Center(
-              child: Text(
-                'Diseñado por AC y WR',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
             ),
           ),
         ],

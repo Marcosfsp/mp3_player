@@ -19,53 +19,92 @@ class MyApp extends StatelessWidget {
         Provider<DownloadService>(create: (_) => DownloadService()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'MP3 Player',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.light(
-            primary: const Color(0xFF1E88E5), // Azul principal
+            primary: const Color(0xFF6200EA), // Roxo vibrante
             onPrimary: Colors.white,
-            secondary: const Color(0xFF64B5F6), // Azul secundario
-            onSecondary: Colors.white,
-            surface: Colors.white,
-            background: Colors.white,
-            error: Colors.red,
+            secondary: const Color(0xFF03DAC6), // Ciano
+            onSecondary: Colors.black,
+            surface: const Color(0xFFFAFAFA),
+            background: const Color(0xFFF5F5F5),
+            error: const Color(0xFFB00020),
           ),
           appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFF1E88E5),
+            backgroundColor: Color(0xFF6200EA),
             foregroundColor: Colors.white,
-            elevation: 0,
-          ),
-          cardTheme: const CardThemeData(
-            elevation: 2,
+            elevation: 4,
+            centerTitle: true,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(16),
+              ),
             ),
+          ),
+          cardTheme: CardThemeData(
+            elevation: 6,
+            margin: const EdgeInsets.all(12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+              side: BorderSide(
+                color: Colors.grey.shade200,
+                width: 1,
+              ),
+            ),
+            shadowColor: Colors.purple.withOpacity(0.2),
+          ),
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            backgroundColor: Color(0xFF6200EA),
+            foregroundColor: Colors.white,
+            elevation: 8,
+            shape: CircleBorder(),
           ),
         ),
         darkTheme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.dark(
-            primary: const Color(0xFF1E88E5),
-            onPrimary: Colors.white,
-            secondary: const Color(0xFF64B5F6),
-            onSecondary: Colors.white,
+            primary: const Color(0xFFBB86FC), // Roxo claro
+            onPrimary: Colors.black,
+            secondary: const Color(0xFF03DAC6), // Ciano
+            onSecondary: Colors.black,
             surface: const Color(0xFF121212),
-            background: const Color(0xFF121212),
-            error: Colors.red,
+            background: const Color(0xFF000000),
+            error: const Color(0xFFCF6679),
           ),
           appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFF1E88E5),
+            backgroundColor: Color(0xFF1E1E1E),
             foregroundColor: Colors.white,
-            elevation: 0,
-          ),
-          cardTheme: const CardThemeData(
-            elevation: 2,
+            elevation: 4,
+            centerTitle: true,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
+              borderRadius: BorderRadius.vertical(
+                bottom: Radius.circular(16),
+              ),
             ),
           ),
+          cardTheme: CardThemeData(
+            elevation: 6,
+            margin: const EdgeInsets.all(12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+              side: BorderSide(
+                color: Colors.grey.shade800,
+                width: 1,
+              ),
+            ),
+            shadowColor: Colors.purple.withOpacity(0.3),
+            color: const Color(0xFF1E1E1E),
+          ),
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            backgroundColor: Color(0xFFBB86FC),
+            foregroundColor: Colors.black,
+            elevation: 8,
+            shape: CircleBorder(),
+          ),
         ),
+        themeMode: ThemeMode.system,
         home: const HomeScreen(),
       ),
     );
