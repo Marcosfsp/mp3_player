@@ -73,9 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       });
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error al descargar: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao baixar: $e')),
+      );
     }
   }
 
@@ -89,9 +89,16 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(
+            color: theme.colorScheme.primary,
+          ),
+        ),
+      );
     }
 
     if (_error != null) {
@@ -100,10 +107,13 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Error: $_error'),
+              Icon(Icons.error_outline, color: Colors.red[400], size: 40),
+              const SizedBox(height: 16),
+              Text('$_error', style: theme.textTheme.bodyMedium),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _initializeApp,
-                child: const Text('Reintentar'),
+                child: const Text('Tentar novamente'),
               ),
             ],
           ),
@@ -112,158 +122,164 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
       appBar: AppBar(
         title: const Text('Spotify Dos Crias'),
         centerTitle: true,
+        backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+        foregroundColor: isDark ? Colors.white : Colors.black,
         elevation: 0,
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
       ),
-      body: Column(
-        children: [
-          if (_audioService.currentSong != null)
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceVariant,
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.colorScheme.primary.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    _audioService.currentSong!.title,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+      body: Container(
+        color: isDark ? Colors.grey[850] : Colors.grey[100],
+        child: Column(
+          children: [
+            if (_audioService.currentSong != null)
+              Container(
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.grey[800] : Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _audioService.currentSong!.author,
-                    style: theme.textTheme.titleMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Text(_formatDuration(_currentPosition)),
-                      Expanded(
-                        child: Slider(
-                          value: _currentPosition.inSeconds.toDouble(),
-                          max: _totalDuration?.inSeconds.toDouble() ?? 0,
-                          onChanged: (value) {
-                            _audioService.seekTo(
-                              Duration(seconds: value.toInt()),
-                            );
-                          },
-                        ),
-                      ),
-                      Text(_formatDuration(_totalDuration ?? Duration.zero)),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          _audioService.isPlaying
-                              ? Icons.pause_circle
-                              : Icons.play_circle,
-                          size: 48,
-                          color: theme.colorScheme.primary,
-                        ),
-                        onPressed: () {
-                          if (_audioService.isPlaying) {
-                            _audioService.pause();
-                          } else {
-                            _audioService.play(_audioService.currentSong!);
-                          }
-                          setState(() {});
-                        },
-                      ),
-                      if (_isBuffering)
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(8),
-              itemCount: _songs.length,
-              itemBuilder: (context, index) {
-                final song = _songs[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 4),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: theme.colorScheme.primary.withOpacity(
-                        0.1,
-                      ),
-                      child: Icon(
-                        song.isDownloaded ? Icons.music_note : Icons.download,
-                        color: theme.colorScheme.primary,
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      _audioService.currentSong!.title,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
-                    title: Text(song.title),
-                    subtitle: Text('${song.author} • ${song.duration}'),
-                    trailing: song.isDownloading
-                        ? SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              value: song.downloadProgress,
+                    const SizedBox(height: 4),
+                    Text(
+                      _audioService.currentSong!.author,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: isDark ? Colors.grey[400] : Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Slider(
+                      value: _currentPosition.inSeconds.toDouble(),
+                      max: _totalDuration?.inSeconds.toDouble() ?? 0,
+                      activeColor: theme.colorScheme.primary,
+                      inactiveColor: Colors.grey[300],
+                      onChanged: (value) {
+                        _audioService.seekTo(Duration(seconds: value.toInt()));
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _formatDuration(_currentPosition),
+                            style: TextStyle(
+                              color:
+                                  isDark ? Colors.grey[400] : Colors.grey[600],
                             ),
-                          )
-                        : IconButton(
+                          ),
+                          IconButton(
                             icon: Icon(
-                              song.isDownloaded
-                                  ? Icons.play_arrow
-                                  : Icons.download,
+                              _audioService.isPlaying
+                                  ? Icons.pause_circle_filled
+                                  : Icons.play_circle_filled,
+                              size: 40,
                               color: theme.colorScheme.primary,
                             ),
                             onPressed: () {
-                              if (song.isDownloaded) {
-                                _audioService.play(song);
+                              if (_audioService.isPlaying) {
+                                _audioService.pause();
                               } else {
-                                _downloadSong(song);
+                                _audioService.play(_audioService.currentSong!);
                               }
+                              setState(() {});
                             },
                           ),
-                  ),
-                );
-              },
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, -2),
+                          Text(
+                            _formatDuration(_totalDuration ?? Duration.zero),
+                            style: TextStyle(
+                              color:
+                                  isDark ? Colors.grey[400] : Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: _songs.length,
+                itemBuilder: (context, index) {
+                  final song = _songs[index];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    color: isDark ? Colors.grey[800] : Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor:
+                            theme.colorScheme.primary.withOpacity(0.1),
+                        child: Icon(
+                          song.isDownloaded ? Icons.music_note : Icons.download,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      title: Text(
+                        song.title,
+                        style: TextStyle(
+                          color: isDark ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${song.author} • ${song.duration}',
+                        style: TextStyle(
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
+                        ),
+                      ),
+                      trailing: song.isDownloading
+                          ? SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                value: song.downloadProgress,
+                                color: theme.colorScheme.primary,
+                              ),
+                            )
+                          : IconButton(
+                              icon: Icon(
+                                song.isDownloaded
+                                    ? Icons.play_arrow
+                                    : Icons.download,
+                                color: theme.colorScheme.primary,
+                              ),
+                              onPressed: () {
+                                if (song.isDownloaded) {
+                                  _audioService.play(song);
+                                } else {
+                                  _downloadSong(song);
+                                }
+                              },
+                            ),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
