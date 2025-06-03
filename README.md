@@ -1,4 +1,4 @@
-Um aplicativo de player de música MP3 desenvolvido em Flutter, com reprodução em primeiro e segundo plano, gerenciamento de playlists e notificações persistentes.
+Um aplicativo de player de música MP3 desenvolvido em Flutter por Marcos Pinto e Thiago Torres, com reprodução em primeiro e segundo plano, gerenciamento de playlists e notificações persistentes.
 ✨ Funcionalidades
 
     ✅ Reprodução de músicas MP3
